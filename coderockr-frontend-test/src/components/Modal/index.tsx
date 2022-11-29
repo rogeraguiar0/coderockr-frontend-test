@@ -2,17 +2,45 @@ import { useContext } from "react";
 import { AiOutlineClose, AiOutlineSend } from "react-icons/ai";
 import { ModalContext } from "../../contexts/modalContext";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+interface iDataModal {
+  name: string;
+  email: string;
+  phone: string;
+  post: string;
+}
 
 const Modal = () => {
+  const schema = yup.object().shape({
+    name: yup.string().required("Campo obrigatório"),
+    email: yup.string().required("Campo obrigatório").email("Email inválido"),
+    phone: yup
+      .string()
+      .required("Campo obrigatório")
+      .matches(
+        /(\(?\d{2}\)?\s)?(\d{4,5}\-\d{4})/,
+        "Telefone inválido. Exememplo: 31 99999-9999"
+      ),
+    post: yup.string().required("Campo obrigatório"),
+  });
+
   const { openModal, setOpenModal } = useContext(ModalContext);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+    reset,
+  } = useForm<iDataModal>({
+    resolver: yupResolver(schema),
+  });
 
-  const handleForm = (data: any) => {
+  const handleForm = (data: iDataModal) => {
     console.log(data);
+    reset();
+    setOpenModal(false);
   };
 
   if (openModal) {
@@ -20,22 +48,45 @@ const Modal = () => {
       <div className="modal-wraper">
         <div className="modal-card">
           <h2>Contact</h2>
-          <form onSubmit={() => handleSubmit(handleForm)}>
+          <form onSubmit={handleSubmit(handleForm)}>
             <div>
               <label htmlFor="name">Name</label>
-              <input id="name" placeholder="Fill your name" type="text" />
+              <input
+                {...register("name")}
+                id="name"
+                placeholder="Fill your name"
+                type="text"
+              />
+              <span>{errors.name?.message}</span>
             </div>
             <div>
               <label htmlFor="email">Email</label>
-              <input id="email" placeholder="Fill a valid email" type="text" />
+              <input
+                {...register("email")}
+                id="email"
+                placeholder="Fill a valid email"
+                type="text"
+              />
+              <span>{errors.email?.message}</span>
             </div>
             <div>
               <label htmlFor="phone">Phone</label>
-              <input id="phone" placeholder="Fill your phone" type="text" />
+              <input
+                {...register("phone")}
+                id="phone"
+                placeholder="Fill your phone"
+                type="text"
+              />
+              <span>{errors.phone?.message}</span>
             </div>
             <div>
-              <label htmlFor="content">Name</label>
-              <textarea id="content" placeholder="Hello..." />
+              <label htmlFor="content">Post</label>
+              <textarea
+                {...register("post")}
+                id="content"
+                placeholder="Hello..."
+              />
+              <span>{errors.post?.message}</span>
             </div>
             <button type="submit">
               <AiOutlineSend />
