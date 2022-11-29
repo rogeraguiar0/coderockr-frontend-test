@@ -4,6 +4,7 @@ import { ModalContext } from "../../contexts/modalContext";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { toast } from "react-toastify";
 
 interface iDataModal {
   name: string;
@@ -14,16 +15,16 @@ interface iDataModal {
 
 const Modal = () => {
   const schema = yup.object().shape({
-    name: yup.string().required("Campo obrigatório"),
-    email: yup.string().required("Campo obrigatório").email("Email inválido"),
+    name: yup.string().required("Required field"),
+    email: yup.string().required("Required field").email("Invalid email"),
     phone: yup
       .string()
-      .required("Campo obrigatório")
+      .required("Required field")
       .matches(
         /(\(?\d{2}\)?\s)?(\d{4,5}\-\d{4})/,
-        "Telefone inválido. Exememplo: 31 99999-9999"
+        "Invalid phone number. Example: 31 99999-9999"
       ),
-    post: yup.string().required("Campo obrigatório"),
+    post: yup.string().required("Required field"),
   });
 
   const { openModal, setOpenModal } = useContext(ModalContext);
@@ -39,6 +40,7 @@ const Modal = () => {
 
   const handleForm = (data: iDataModal) => {
     console.log(data);
+    toast.success("Sucess");
     reset();
     setOpenModal(false);
   };
