@@ -291,6 +291,26 @@ main {
       width: 75%;
       line-height: 24px;
     }
+
+    .post-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        font-size: 18px;
+        animation: loading 1s infinite;
+      }
+    }
+  }
+}
+
+@keyframes loading {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 

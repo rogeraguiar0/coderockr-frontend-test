@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { coderockrApi } from "../../services/coderockrApi";
 import { iPosts } from "../HomePage";
+import { AiOutlineLoading } from "react-icons/ai";
 
 const PostPage = () => {
   const { id } = useParams();
@@ -93,7 +94,9 @@ const PostPage = () => {
               <p className="post-text">{actualPost?.content}</p>
             </>
           ) : (
-            <p className="post-loading">Loading...</p>
+            <p className="post-loading">
+              <AiOutlineLoading />
+            </p>
           )}
         </section>
       </main>
